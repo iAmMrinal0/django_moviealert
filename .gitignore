@@ -1,0 +1,5 @@
+/.coverage
+*.pyc
+htmlcov/
+__pycache__
+moviealert/fixtures

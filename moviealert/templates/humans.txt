@@ -1,0 +1,13 @@
+# humanstxt.org/
+# The humans responsible & technology colophon
+ 
+# TEAM
+    Mrinal Purohit -- Developer -- @iammrinal0
+ 
+# THANKS
+    Thanks to all my friends who helped me design this app
+ 
+# TECHNOLOGY COLOPHON
+    Django
+    HTML5 Boilerplate
+    Twitter Bootstrap
