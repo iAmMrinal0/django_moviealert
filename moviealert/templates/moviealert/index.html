@@ -3,12 +3,20 @@
 {% load l10n %}
 {% load tz %}
 {% block content %}
+    {{ form.media }}
  <!-- Main jumbotron for a primary marketing message or call to action -->
     <div class="jumbotron">
       <div class="container">
-        <h1>Hello World</h1>
-        <p>This is a template for a simple marketing or informational website. It includes a large callout called a jumbotron and three supporting pieces of content. Use it as a starting point to create something more unique.</p>
-        <p><a class="btn btn-primary btn-lg" href="#" role="button">Learn more &raquo;</a></p>
+        <h2>Welcome to Movie Alert</h2>
+        <p>This is a website where you enter your movie to track with location and once it hits a cinema hall near you it would send you a notification.</p>
+        <p>
+            <form action="{% url "form_data" %}" method="POST">{% csrf_token %}
+                <table>
+                    {{ form.as_table }}
+                </table>
+                <button class="btn btn-primary btn-lg" type="submit">Submit</button>
+            </form>
+        </p>
       </div>
     </div>
 

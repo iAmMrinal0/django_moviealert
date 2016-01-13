@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block head_title %}Movie Alert{% endblock %}
+{% load l10n %}
+{% load tz %}
+{% block content %}
+    <div class="jumbotron">
+        <div class="container">
+            {% for key, value in data.items %}
+                {{ value }}
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}
