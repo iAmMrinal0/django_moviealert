@@ -1,12 +1,17 @@
 from django import forms
 from django.conf import settings
 from moviealert.base.widgets import CalendarWidget
+from .models import TaskList
 
 
-class MovieForm(forms.Form):
+class MovieForm(forms.ModelForm):
 
-    city_name = forms.CharField(label="City Name", max_length=20)
-    movie_name = forms.CharField(label="Movie Name", max_length=25)
-    language = forms.CharField(label="Language", max_length=20)
-    movie_date = forms.DateField(
-        widget=CalendarWidget, input_formats=settings.ALLOWED_DATE_FORMAT)
+    def __init__(self, *args, **kwargs):
+        super(MovieForm, self).__init__(*args, **kwargs)
+        self.fields['movie_date'] = forms.DateField(
+            widget=CalendarWidget,
+            input_formats=settings.ALLOWED_DATE_FORMAT)
+
+    class Meta:
+        model = TaskList
+        exclude = ("username",)

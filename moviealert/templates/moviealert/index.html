@@ -8,7 +8,9 @@
     <div class="jumbotron">
       <div class="container">
         <h2>Welcome to Movie Alert</h2>
-        <p>This is a website where you enter your movie to track with location and once it hits a cinema hall near you it would send you a notification.</p>
+        <p>This is a website where you enter your movie to track with location and once it hits a cinema hall near you it would send you a notification.{% if not user.is_authenticated %}
+            You need to register to use the app.
+      {% endif %}</p>
         <p>
             <form action="{% url "form_data" %}" method="POST">{% csrf_token %}
                 <table>
