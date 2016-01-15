@@ -17,11 +17,14 @@ class CalendarWidget(forms.TextInput):
         render_str = '''
             <script type="text/javascript">
             $(function() {
-                $.noConflict(true);
                 $("#id_%(name)s").datepicker({
-                    format: 'dd/mm/yyyy'
+                    autoclose: true,
+                    endDate: "+1m",
+                    format: "dd/mm/yyyy",
+                    startDate: "+1d",
+                    todayHighlight: true
                  });
-            });
+             });
             </script>
         ''' % {'name': name}
         rendered_input = super(CalendarWidget, self).render(name, value, attrs)
@@ -34,7 +37,7 @@ class CalendarWidget(forms.TextInput):
 
     class Media:
         css = {
-            'all': ('css/datepicker.css',)
+            'all': ('css/bootstrap-datepicker.css',)
         }
         js = ('js/vendor/jquery-2.1.4.min.js',
               'js/vendor/bootstrap-datepicker.js',)

@@ -21,6 +21,10 @@ def form_data(request):
         form = MovieForm(request.POST)
         if form.is_valid():
             details = form.cleaned_data
+            email = request.user.email
+            instance = form.save(commit=False)
+            instance.username = email
+            instance.save()
             return render(request, "data.html", {"data": details})
         else:
             return redirect('/')

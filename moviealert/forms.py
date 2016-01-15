@@ -14,4 +14,4 @@ class MovieForm(forms.ModelForm):
 
     class Meta:
         model = TaskList
-        exclude = ("username",)
+        exclude = ("username", "task_completed", "notified", "movie_found",)
