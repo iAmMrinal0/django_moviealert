@@ -21,10 +21,12 @@ class TestGoogleLogin(StaticLiveServerTestCase):
         self.browser.quit()
 
     def get_element_by_id(self, element_id):
-        return self.browser.wait.until(EC.presence_of_element_located((By.ID, element_id)))
+        return self.browser.wait.until(EC.presence_of_element_located(
+            (By.ID, element_id)))
 
     def get_button_by_id(self, element_id):
-        return self.browser.wait.until(EC.element_to_be_clickable((By.ID, element_id)))
+        return self.browser.wait.until(EC.element_to_be_clickable(
+            (By.ID, element_id)))
 
     def get_full_url(self, namespace):
         return "{0}{1}".format(self.live_server_url, reverse(namespace))

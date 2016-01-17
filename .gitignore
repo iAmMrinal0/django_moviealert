@@ -3,3 +3,5 @@
 htmlcov/
 __pycache__
 moviealert/fixtures
+api/
+celerybeat-schedule.db
