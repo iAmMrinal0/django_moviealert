@@ -149,3 +149,10 @@ CELERY_ACCEPT_CONTENT = ['application/json']
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
 CELERY_TIMEZONE = 'Asia/Kolkata'
+
+# MAIL STUFF
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = get_env_variable("GMAIL_ID")
+EMAIL_HOST_PASSWORD = get_env_variable("GMAIL_PASSWORD")
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True

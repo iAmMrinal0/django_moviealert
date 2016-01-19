@@ -1,8 +1,8 @@
+from django.core.mail import send_mail
 from .models import TaskList
 from .api import kimono
 import datetime
 import json
-import pprint
 import requests
 
 
@@ -53,4 +53,6 @@ def search_movie():
         city_url = find_city_url(row, region_data)
         show_url = find_show_url(row, city_url)
         movie_times = find_movie_times(row, show_url)
-        pprint.pprint(movie_times)
+        send_mail("Movie Alert found your movie!", row["movie_name"],
+                  "moviealert.mailer@gmail.com",
+                  [row["username"]], fail_silently=False)
