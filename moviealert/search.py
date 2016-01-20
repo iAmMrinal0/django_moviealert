@@ -1,7 +1,7 @@
 from django.core.mail import send_mail
 from .models import TaskList
 from .api import kimono
-import datetime
+from datetime import datetime
 import json
 import requests
 
@@ -36,14 +36,22 @@ def find_movie_times(row, show_url):
     kimpath2 = url_split[2]
     kimpath3 = url_split[3]
     str_date = str(row["movie_date"])
-    bms_date_format = datetime.datetime.strptime(
+    bms_date_format = datetime.strptime(
         str_date, "%Y-%m-%d").strftime("%Y%m%d")
     kimpath4 = bms_date_format
     data = {"apikey": kimono.APIKEY, "kimpath2": kimpath2,
-            "kimpath3": kimpath3, "kimpath4": kimpath4}
+            "kimpath3": kimpath3, "kimpath4": kimpath4, "kimmodify": 1}
     response = requests.get(url, params=data)
     times = response.json()
     return times
+
+
+def verify_times(row, data):
+    db_date = str(row["movie_date"])[8:10]
+    strp_date = data["results"]["bms_movie"][0]["bms_movie_date"]
+    if db_date != strp_date:
+        return False
+    return True
 
 
 def search_movie():
@@ -53,6 +61,9 @@ def search_movie():
         city_url = find_city_url(row, region_data)
         show_url = find_show_url(row, city_url)
         movie_times = find_movie_times(row, show_url)
-        send_mail("Movie Alert found your movie!", row["movie_name"],
-                  "moviealert.mailer@gmail.com",
-                  [row["username"]], fail_silently=False)
+        if verify_times(row, movie_times):
+            temp = movie_times["results"]["bms_movie"]
+            movie_name = temp[0]["bms_movie_name"]
+            send_mail("Movie Alert found your movie!", movie_name,
+                      "moviealert.mailer@gmail.com",
+                      [row["username"]], fail_silently=False)
