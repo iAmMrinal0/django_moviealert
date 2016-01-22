@@ -1,4 +1,6 @@
 from django.core.mail import send_mail
+from django.conf import settings
+from django.template.loader import render_to_string
 from .models import TaskList
 from .api import kimono
 from datetime import datetime
@@ -61,9 +63,13 @@ def search_movie():
         city_url = find_city_url(row, region_data)
         show_url = find_show_url(row, city_url)
         movie_times = find_movie_times(row, show_url)
+        ctx = {"data": movie_times}
         if verify_times(row, movie_times):
-            temp = movie_times["results"]["bms_movie"]
-            movie_name = temp[0]["bms_movie_name"]
-            send_mail("Movie Alert found your movie!", movie_name,
-                      "moviealert.mailer@gmail.com",
-                      [row["username"]], fail_silently=False)
+            mail_content = render_to_string("email.html", ctx).strip()
+            send_mail("Movie Alert found your movie!", "",
+                      settings.EMAIL_HOST_USER, [row["username"]],
+                      fail_silently=False, html_message=mail_content)
+            upd_db = TaskList.objects.get(pk=row["id"])
+            upd_db.task_completed = True
+            upd_db.notified = True
+            upd_db.save()
