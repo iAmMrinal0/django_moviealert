@@ -58,18 +58,21 @@ def verify_times(row, data):
 
 def search_movie():
     region_data = load_regions()
-    result = TaskList.objects.filter(task_completed=False).values()
+    result = TaskList.objects.filter(task_completed=False,
+                                     movie_date__gte=datetime.now()).values()
     for row in result:
         city_url = find_city_url(row, region_data)
         show_url = find_show_url(row, city_url)
-        movie_times = find_movie_times(row, show_url)
-        ctx = {"data": movie_times}
-        if verify_times(row, movie_times):
-            mail_content = render_to_string("email.html", ctx).strip()
-            send_mail("Movie Alert found your movie!", "",
-                      settings.EMAIL_HOST_USER, [row["username"]],
-                      fail_silently=False, html_message=mail_content)
-            upd_db = TaskList.objects.get(pk=row["id"])
-            upd_db.task_completed = True
-            upd_db.notified = True
-            upd_db.save()
+        if show_url:
+            movie_times = find_movie_times(row, show_url)
+            ctx = {"data": movie_times}
+            if verify_times(row, movie_times):
+                mail_content = render_to_string("email.html", ctx).strip()
+                send_mail("Movie Alert found your movie!", "",
+                          settings.EMAIL_HOST_USER, [row["username"]],
+                          fail_silently=False, html_message=mail_content)
+                upd_db = TaskList.objects.get(pk=row["id"])
+                upd_db.task_completed = True
+                upd_db.notified = True
+                upd_db.movie_found = True
+                upd_db.save()
