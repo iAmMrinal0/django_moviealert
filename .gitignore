@@ -5,3 +5,4 @@ __pycache__
 moviealert/fixtures
 api/
 celerybeat-schedule.db
+celerybeat.pid
