@@ -1,15 +1,19 @@
 from django.shortcuts import render
-from django.utils.timezone import now
 from django.shortcuts import redirect
 from moviealert.forms import MovieForm
-import datetime
 
 
 def home(request):
-    today = datetime.date.today()
-    movie_form = MovieForm()
-    return render(request, "moviealert/index.html",
-                  {"today": today, "now": now(), "form": movie_form})
+    form = MovieForm()
+    if request.method == 'POST':
+        form = MovieForm(request.POST)
+        if form.is_valid():
+            email = request.user.email
+            instance = form.save(commit=False)
+            instance.username = email
+            instance.save()
+            return redirect("form_data")
+    return render(request, "moviealert/index.html", {"form": form})
 
 
 def home_files(request, filename):
@@ -17,14 +21,4 @@ def home_files(request, filename):
 
 
 def form_data(request):
-    if request.method == 'POST':
-        form = MovieForm(request.POST)
-        if form.is_valid():
-            details = form.cleaned_data
-            email = request.user.email
-            instance = form.save(commit=False)
-            instance.username = email
-            instance.save()
-            return render(request, "data.html", {"data": details})
-        else:
-            return redirect('/')
+    return render(request, "data.html")
