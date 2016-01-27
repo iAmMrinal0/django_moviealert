@@ -25,6 +25,7 @@
         <link rel="stylesheet" href="{% static 'css/main.css' %}">
 
         <script src="{% static 'js/vendor/modernizr-2.8.3-respond-1.4.2.min.js' %}"></script>
+        <script src="{% static 'js/vendor/jquery-2.1.4.min.js' %}"></script>
 	{% block head_css %}{% endblock %}
 	{% block head_javascript %}{% endblock %}
     </head>
@@ -46,13 +47,22 @@
         </div>
         <div class="navbar-collapse collapse">
             <div class="navbar-form navbar-right">
-                {% if user.is_authenticated %}
-                    Hi, {{ user.email }}<a id="logout" href="/accounts/logout" class="btn btn-success">Logout</a>
-                {% else %} 
-                    <a id="google_login" href="/accounts/google/login" class="btn btn-success">
-                        Sign in with Google
-                    </a>
-                {% endif %}
+                <div class="dropdown">
+                    {% if user.is_authenticated %}
+                        <div class="dropdown">
+                            <button class="btn btn-success dropdown-toggle" type="button" data-toggle="dropdown">Hi, {{ user.first_name }}
+                                <span class="caret"></span></button>
+                            <ul class="dropdown-menu">
+                                <li><a href="{% url "tasklist" %}">Task List</a></li>
+                                <li><a href="/accounts/logout">Logout</a></li>
+                            </ul>
+                        </div>
+                    {% else %}
+                        <a id="google_login" href="/accounts/google/login" class="btn btn-success">
+                            Sign in with Google
+                        </a>
+                    {% endif %}
+                </div>
             </div>
         </div><!--/.navbar-collapse -->
       </div>
