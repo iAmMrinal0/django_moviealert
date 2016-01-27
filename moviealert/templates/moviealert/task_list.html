@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block head_title %}Movie Alert{% endblock %}
+{% load l10n %}
+{% load tz %}
+{% block content %}
+    <div class="jumbotron">
+        <div class="container">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Movie Name</th>
+                        <th>Date</th>
+                        <th>Language</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for value in data %}
+                        <tr class="{% if value.movie_found %}success{% elif value.movie_date < today %}danger{% else %}warning{% endif %}">
+                            <td>{{ value.movie_name|capfirst }}</td>
+                            <td>{{ value.movie_date }}</td>
+                            <td>{{ value.movie_language|capfirst }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock %}

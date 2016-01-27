@@ -15,13 +15,13 @@ Including another URLconf
 """
 from django.conf.urls import include, url
 from django.contrib import admin
-from .views import home, home_files, form_data
+from .views import home, home_files, task_list
 
 urlpatterns = [
     url(r'^(?P<filename>(robots.txt)|(humans.txt))$',
         home_files, name='home_files'),
     url(r'^$', home, name="home"),
-    url(r'^form_data', form_data, name="form_data"),
+    url(r'^tasklist', task_list, name="tasklist"),
     url(r'^accounts/logout/$',
         'django.contrib.auth.views.logout', {'next_page': '/'}),
     url(r'^accounts/', include('allauth.urls')),
