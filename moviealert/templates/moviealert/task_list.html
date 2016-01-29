@@ -5,6 +5,7 @@
 {% block content %}
     <div class="jumbotron">
         <div class="container">
+            {% if data %}
             <table class="table">
                 <thead>
                     <tr>
@@ -23,6 +24,7 @@
                     {% endfor %}
                 </tbody>
             </table>
+            {% endif %}
         </div>
     </div>
 {% endblock %}

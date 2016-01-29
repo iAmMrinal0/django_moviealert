@@ -1,8 +1,10 @@
+from django.http import HttpResponse
 from django.shortcuts import render
 from django.shortcuts import redirect
 from moviealert.forms import MovieForm
-from moviealert.models import TaskList
+from moviealert.models import TaskList, RegionData
 from datetime import date
+import json
 
 
 def home(request):
@@ -29,3 +31,20 @@ def task_list(request):
         return render(request, "moviealert/task_list.html",
                       {"data": res, "today": today})
     return redirect("/")
+
+
+def get_city(request):
+    if request.is_ajax():
+        q = request.GET.get("term", "")
+        regions = RegionData.objects.filter(bms_city__icontains=q)
+        results = []
+        for reg in regions:
+            reg_json = {}
+            reg_json["id"] = reg.id
+            reg_json["city"] = reg.bms_city
+            results.append(reg_json)
+        data = json.dumps(results)
+    else:
+        data = "fail"
+    mimetype = "application/json"
+    return HttpResponse(data, mimetype)

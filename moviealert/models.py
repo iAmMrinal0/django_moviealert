@@ -1,9 +1,14 @@
 from django.db import models as m
 
 
+class RegionData(m.Model):
+    bms_city = m.CharField(max_length=50)
+    bms_city_url = m.URLField()
+
+
 class TaskList(m.Model):
     username = m.EmailField()
-    city_name = m.CharField(max_length=20)
+    city_name = m.CharField(max_length=50)
     movie_name = m.CharField(max_length=20)
     movie_language = m.CharField(max_length=20)
     movie_date = m.DateField()

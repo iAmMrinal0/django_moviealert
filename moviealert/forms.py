@@ -11,6 +11,8 @@ class MovieForm(forms.ModelForm):
         self.fields['movie_date'] = forms.DateField(
             widget=CalendarWidget,
             input_formats=settings.ALLOWED_DATE_FORMAT)
+        self.fields["city_name"] = forms.CharField(
+            widget=forms.TextInput(attrs={"id": "txtSearch"}))
 
     class Meta:
         model = TaskList
