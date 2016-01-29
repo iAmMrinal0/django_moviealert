@@ -41,7 +41,8 @@ def get_city(request):
         for reg in regions:
             reg_json = {}
             reg_json["id"] = reg.id
-            reg_json["city"] = reg.bms_city
+            reg_json["label"] = reg.bms_city
+            reg_json["value"] = reg.bms_city
             results.append(reg_json)
         data = json.dumps(results)
     else:
