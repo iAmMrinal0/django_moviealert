@@ -15,6 +15,7 @@ def home(request):
             email = request.user.email
             instance = form.save(commit=False)
             instance.username = email
+            instance.city = form.cleaned_data["city"]
             instance.save()
             return redirect("tasklist")
     return render(request, "moviealert/index.html", {"form": form})
