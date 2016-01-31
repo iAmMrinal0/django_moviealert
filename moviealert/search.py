@@ -1,23 +1,10 @@
 from django.core.mail import send_mail
 from django.conf import settings
 from django.template.loader import render_to_string
-from .models import TaskList
+from .models import TaskList, RegionData
 from .api import kimono
 from datetime import datetime
-import json
 import requests
-
-
-def load_regions():
-    with open("moviealert/fixtures/regions.json") as f:
-        region_data = json.loads(f.read())
-    return region_data
-
-
-def find_city_url(row, region_data):
-    for val in region_data["results"]["bms_city"]:
-        if row["city_name"].lower() in val["city"]["text"].lower():
-            return val["city"]["href"]
 
 
 def find_show_url(row, city_url):
@@ -57,11 +44,10 @@ def verify_times(row, data):
 
 
 def search_movie():
-    region_data = load_regions()
     result = TaskList.objects.filter(task_completed=False,
                                      movie_date__gte=datetime.now()).values()
     for row in result:
-        city_url = find_city_url(row, region_data)
+        city_url = RegionData.objects.get(id=row["city_id"]).bms_city_url
         show_url = find_show_url(row, city_url)
         if show_url:
             movie_times = find_movie_times(row, show_url)
