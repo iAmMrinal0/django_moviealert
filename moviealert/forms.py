@@ -18,8 +18,12 @@ class MovieForm(forms.ModelForm):
 
     def clean(self):
         cleaned_data = super(MovieForm, self).clean()
-        cleaned_data['city'] = RegionData.objects.get(
-            bms_city=cleaned_data['city'])
+        try:
+            cleaned_data['city'] = RegionData.objects.get(
+                bms_city=cleaned_data['city'])
+        except RegionData.DoesNotExist:
+            self.add_error("city",
+                           "Select only values from autocomplete!")
 
     class Meta:
         model = TaskList
