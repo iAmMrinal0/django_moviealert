@@ -7,6 +7,13 @@ from datetime import datetime
 import requests
 
 
+def validate(db_value, response_value):
+    if db_value.lower() in response_value.lower():
+        return True
+    else:
+        return False
+
+
 def find_show_url(row, city_url):
     url = "{0}{1}".format(kimono.KIMONO_URL, kimono.MOVIE_LIST_ID)
     kimpath1 = city_url.rsplit("/", 2)[1]
@@ -14,8 +21,8 @@ def find_show_url(row, city_url):
     response = requests.get(url, params=data)
     movies = response.json()
     for val in movies["results"]["bms_city_movies"]:
-        if (row["movie_name"].lower() in val["bms_movie_name"].lower() and
-                row["movie_language"].lower() in val["bms_movie_language"].lower()):
+        if (validate(row["movie_name"], val["bms_movie_name"]) and
+                validate(row["movie_language"], val["bms_movie_language"])):
             return val["bms_movie_book"]
 
 
