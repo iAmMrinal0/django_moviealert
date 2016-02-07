@@ -9,7 +9,8 @@ class MovieForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(MovieForm, self).__init__(*args, **kwargs)
         self.fields['movie_date'] = forms.DateField(
-            widget=CalendarWidget,
+            widget=CalendarWidget(attrs={"readonly": "readonly",
+                                         "style": "background:white;"}),
             input_formats=settings.ALLOWED_DATE_FORMAT)
         self.fields["city"] = forms.CharField(
             widget=forms.TextInput(attrs={"id": "txtSearch"}))
