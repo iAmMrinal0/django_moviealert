@@ -50,14 +50,14 @@
         </div>
         <div class="navbar-collapse collapse">
             <div class="navbar-form navbar-right">
-                <div class="dropdown">
+                <div class="dropdown" id="user_id">
                     {% if user.is_authenticated %}
                         <div class="dropdown">
                             <button class="btn btn-success dropdown-toggle" type="button" data-toggle="dropdown">Hi, {{ user.first_name }}
                                 <span class="caret"></span></button>
                             <ul class="dropdown-menu">
                                 <li><a href="{% url "tasklist" %}">Task List</a></li>
-                                <li><a href="/accounts/logout">Logout</a></li>
+                                <li><a href="/accounts/logout" id="logout">Logout</a></li>
                             </ul>
                         </div>
                     {% else %}

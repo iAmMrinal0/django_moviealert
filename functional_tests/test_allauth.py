@@ -53,6 +53,8 @@ class TestGoogleLogin(StaticLiveServerTestCase):
         self.user_login()
         with self.assertRaises(TimeoutException):
             self.get_element_by_id("google_login")
+        user_drop = self.get_element_by_id("user_id")
+        user_drop.click()
         google_logout = self.get_element_by_id("logout")
         google_logout.click()
         google_login = self.get_element_by_id("google_login")
