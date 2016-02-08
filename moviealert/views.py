@@ -9,7 +9,7 @@ import json
 
 def home(request):
     form = MovieForm()
-    if request.method == 'POST':
+    if request.method == 'POST' and request.user.is_authenticated():
         form = MovieForm(request.POST)
         if form.is_valid():
             email = request.user.email
