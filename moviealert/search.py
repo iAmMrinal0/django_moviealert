@@ -1,8 +1,8 @@
+from bs4 import BeautifulSoup
 from django.core.mail import send_mail
 from django.conf import settings
 from django.template.loader import render_to_string
 from .models import TaskList, RegionData
-from .api import kimono
 from datetime import datetime
 import requests
 
@@ -15,15 +15,20 @@ def validate(db_value, response_value):
 
 
 def find_show_url(row, city_url):
-    url = "{0}{1}".format(kimono.KIMONO_URL, kimono.MOVIE_LIST_ID)
-    kimpath1 = city_url.rsplit("/", 2)[1]
-    data = {"apikey": kimono.APIKEY, "kimpath1": kimpath1}
-    response = requests.get(url, params=data)
-    movies = response.json()
-    for val in movies["results"]["bms_city_movies"]:
-        if (validate(row["movie_name"], val["bms_movie_name"]) and
-                validate(row["movie_language"], val["bms_movie_language"])):
-            return val["bms_movie_book"]
+    url = city_url
+    headers = {"User-Agent":
+               "Mozilla/5.0 (Windows NT 6.3; WOW64; rv:36.0) Gecko/20100101 Firefox/36.0"}
+    response = requests.get(url, headers=headers)
+    source = BeautifulSoup(response.content, "html.parser")
+    tags = source.find_all("section",
+                           attrs={"class": "language-based-formats"})
+    for tag in tags:
+        c = tag.find_all("a")
+        h = tag.find_all("h2")
+        m_name = row["movie_name"].lower().replace(" ", "-")
+        if (validate(row["movie_language"].lower(), h[0].text.lower()) and
+                validate(m_name, c[0]["href"])):
+            return c[0]["href"]
 
 
 def find_movie_times(row, show_url):
