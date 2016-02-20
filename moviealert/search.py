@@ -7,6 +7,9 @@ from datetime import datetime
 import requests
 
 
+ROOT_URL = "http://in.bookmyshow.com"
+
+
 def validate(db_value, response_value):
     if db_value.lower() in response_value.lower():
         return True
@@ -32,19 +35,43 @@ def find_show_url(row, city_url):
 
 
 def find_movie_times(row, show_url):
-    url = "{0}{1}".format(kimono.KIMONO_URL, kimono.MOVIE_TIME_ID)
-    url_split = show_url.rsplit("/", 5)
-    kimpath2 = url_split[2]
-    kimpath3 = url_split[3]
+    headers = {"User-Agent":
+               "Mozilla/5.0 (Windows NT 6.3; WOW64; rv:36.0) Gecko/20100101 Firefox/36.0"}
     str_date = str(row["movie_date"])
     bms_date_format = datetime.strptime(
         str_date, "%Y-%m-%d").strftime("%Y%m%d")
-    kimpath4 = bms_date_format
-    data = {"apikey": kimono.APIKEY, "kimpath2": kimpath2,
-            "kimpath3": kimpath3, "kimpath4": kimpath4, "kimmodify": 1}
-    response = requests.get(url, params=data)
-    times = response.json()
-    return times
+    show_url = show_url[:-9]
+    url = "{0}{1}{2}".format(ROOT_URL, show_url, bms_date_format)
+    response = requests.get(url, headers=headers)
+    source = BeautifulSoup(response.content, "html.parser")
+    m_name = source.find("h1", attrs={"itemprop": "name"})
+    date_scrap = source.find("li", attrs={"class": "_active"})
+    if m_name:
+        fn = {}
+        fn["results"] = {}
+        fn["results"]["bms_movie"] = []
+        fn["results"]["bms_movie"].append(
+            {"bms_movie_name": m_name["content"]})
+        fn["results"]["bms_movie"][-1]["bms_movie_date"] = date_scrap.div.text[:2]
+        fn["results"]["bms_timings"] = []
+        cinema_halls = source.find_all("div", attrs={"class": "container"})
+        for cin in cinema_halls:
+            halls = cin.find_all("li", attrs={"class": "list"})
+            for temp in halls:
+                if temp["data-is-down"] == "false":
+                    times = temp.find_all("div", attrs={"data-online": "Y"})
+                    if times:
+                        fn["results"]["bms_timings"].append(
+                            {"bms_movie_hall": temp["data-name"]})
+                        fn["results"]["bms_timings"][-1]["bms_show_times"] = []
+                        for im in times:
+                            fn["results"][
+                                "bms_timings"][-1]["bms_show_times"].append(
+                                    {"text": im.text.strip(),
+                                     "href": im.a["href"].strip()})
+        return fn
+    else:
+        return False
 
 
 def verify_times(row, data):
