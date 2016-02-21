@@ -65,10 +65,12 @@ def find_movie_times(row, show_url):
                             {"bms_movie_hall": temp["data-name"]})
                         fn["results"]["bms_timings"][-1]["bms_show_times"] = []
                         for im in times:
+                            show_link = im.a["href"].strip()
                             fn["results"][
                                 "bms_timings"][-1]["bms_show_times"].append(
                                     {"text": im.text.strip(),
-                                     "href": im.a["href"].strip()})
+                                     "href": "{0}{1}".format(ROOT_URL,
+                                                             show_link)})
         return fn
     else:
         return False
