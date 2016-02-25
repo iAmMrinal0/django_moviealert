@@ -72,8 +72,7 @@ def find_movie_times(row, show_url):
                                      "href": "{0}{1}".format(ROOT_URL,
                                                              show_link)})
         return fn
-    else:
-        return False
+    return False
 
 
 def verify_times(row, data):
