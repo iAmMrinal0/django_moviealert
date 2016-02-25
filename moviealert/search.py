@@ -19,8 +19,11 @@ def validate(db_value, response_value):
 
 def find_show_url(row, city_url):
     url = city_url
-    headers = {"User-Agent":
-               "Mozilla/5.0 (Windows NT 6.3; WOW64; rv:36.0) Gecko/20100101 Firefox/36.0"}
+    headers = {
+        "User-Agent":
+        ("Mozilla/5.0 (Windows NT 6.3; WOW64; rv:36.0) "
+         "Gecko/20100101 Firefox/36.0")
+    }
     response = requests.get(url, headers=headers)
     source = BeautifulSoup(response.content, "html.parser")
     tags = source.find_all("section",
@@ -35,8 +38,11 @@ def find_show_url(row, city_url):
 
 
 def find_movie_times(row, show_url):
-    headers = {"User-Agent":
-               "Mozilla/5.0 (Windows NT 6.3; WOW64; rv:36.0) Gecko/20100101 Firefox/36.0"}
+    headers = {
+        "User-Agent":
+        ("Mozilla/5.0 (Windows NT 6.3; WOW64; rv:36.0) "
+         "Gecko/20100101 Firefox/36.0")
+    }
     str_date = str(row["movie_date"])
     bms_date_format = datetime.strptime(
         str_date, "%Y-%m-%d").strftime("%Y%m%d")
@@ -52,7 +58,8 @@ def find_movie_times(row, show_url):
         fn["results"]["bms_movie"] = []
         fn["results"]["bms_movie"].append(
             {"bms_movie_name": m_name["content"]})
-        fn["results"]["bms_movie"][-1]["bms_movie_date"] = date_scrap.div.text[:2]
+        date_scraped = date_scrap.div.text
+        fn["results"]["bms_movie"][-1]["bms_movie_date"] = date_scraped[:2]
         fn["results"]["bms_timings"] = []
         cinema_halls = source.find_all("div", attrs={"class": "container"})
         for cin in cinema_halls:
