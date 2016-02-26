@@ -43,9 +43,7 @@ def find_movie_times(row, show_url):
         ("Mozilla/5.0 (Windows NT 6.3; WOW64; rv:36.0) "
          "Gecko/20100101 Firefox/36.0")
     }
-    str_date = str(row["movie_date"])
-    bms_date_format = datetime.strptime(
-        str_date, "%Y-%m-%d").strftime("%Y%m%d")
+    bms_date_format = row["movie_date"].strftime("%Y%m%d")
     show_url = show_url[:-9]
     url = "{0}{1}{2}".format(ROOT_URL, show_url, bms_date_format)
     response = requests.get(url, headers=headers)
