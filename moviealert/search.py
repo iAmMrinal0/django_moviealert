@@ -60,8 +60,8 @@ def find_movie_times(row, show_url):
         fn["results"]["bms_movie"][-1]["bms_movie_date"] = date_scraped[:2]
         fn["results"]["bms_timings"] = []
         cinema_halls = source.find_all("div", attrs={"class": "container"})
-        for cin in cinema_halls:
-            halls = cin.find_all("li", attrs={"class": "list"})
+        for cinema in cinema_halls:
+            halls = cinema.find_all("li", attrs={"class": "list"})
             for temp in halls:
                 if temp["data-is-down"] == "false":
                     times = temp.find_all("div", attrs={"data-online": "Y"})
@@ -69,11 +69,11 @@ def find_movie_times(row, show_url):
                         fn["results"]["bms_timings"].append(
                             {"bms_movie_hall": temp["data-name"]})
                         fn["results"]["bms_timings"][-1]["bms_show_times"] = []
-                        for im in times:
-                            show_link = im.a["href"].strip()
+                        for time in times:
+                            show_link = time.a["href"].strip()
                             fn["results"][
                                 "bms_timings"][-1]["bms_show_times"].append(
-                                    {"text": im.text.strip(),
+                                    {"text": time.text.strip(),
                                      "href": "{0}{1}".format(ROOT_URL,
                                                              show_link)})
         return fn
