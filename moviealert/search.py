@@ -19,8 +19,11 @@ def validate(db_value, response_value):
 
 def find_show_url(row, city_url):
     url = city_url
-    headers = {"User-Agent":
-               "Mozilla/5.0 (Windows NT 6.3; WOW64; rv:36.0) Gecko/20100101 Firefox/36.0"}
+    headers = {
+        "User-Agent":
+        ("Mozilla/5.0 (Windows NT 6.3; WOW64; rv:36.0) "
+         "Gecko/20100101 Firefox/36.0")
+    }
     response = requests.get(url, headers=headers)
     source = BeautifulSoup(response.content, "html.parser")
     tags = source.find_all("section",
@@ -35,11 +38,12 @@ def find_show_url(row, city_url):
 
 
 def find_movie_times(row, show_url):
-    headers = {"User-Agent":
-               "Mozilla/5.0 (Windows NT 6.3; WOW64; rv:36.0) Gecko/20100101 Firefox/36.0"}
-    str_date = str(row["movie_date"])
-    bms_date_format = datetime.strptime(
-        str_date, "%Y-%m-%d").strftime("%Y%m%d")
+    headers = {
+        "User-Agent":
+        ("Mozilla/5.0 (Windows NT 6.3; WOW64; rv:36.0) "
+         "Gecko/20100101 Firefox/36.0")
+    }
+    bms_date_format = row["movie_date"].strftime("%Y%m%d")
     show_url = show_url[:-9]
     url = "{0}{1}{2}".format(ROOT_URL, show_url, bms_date_format)
     response = requests.get(url, headers=headers)
@@ -52,11 +56,12 @@ def find_movie_times(row, show_url):
         fn["results"]["bms_movie"] = []
         fn["results"]["bms_movie"].append(
             {"bms_movie_name": m_name["content"]})
-        fn["results"]["bms_movie"][-1]["bms_movie_date"] = date_scrap.div.text[:2]
+        date_scraped = date_scrap.div.text
+        fn["results"]["bms_movie"][-1]["bms_movie_date"] = date_scraped[:2]
         fn["results"]["bms_timings"] = []
         cinema_halls = source.find_all("div", attrs={"class": "container"})
-        for cin in cinema_halls:
-            halls = cin.find_all("li", attrs={"class": "list"})
+        for cinema in cinema_halls:
+            halls = cinema.find_all("li", attrs={"class": "list"})
             for temp in halls:
                 if temp["data-is-down"] == "false":
                     times = temp.find_all("div", attrs={"data-online": "Y"})
@@ -64,11 +69,11 @@ def find_movie_times(row, show_url):
                         fn["results"]["bms_timings"].append(
                             {"bms_movie_hall": temp["data-name"]})
                         fn["results"]["bms_timings"][-1]["bms_show_times"] = []
-                        for im in times:
-                            show_link = im.a["href"].strip()
+                        for time in times:
+                            show_link = time.a["href"].strip()
                             fn["results"][
                                 "bms_timings"][-1]["bms_show_times"].append(
-                                    {"text": im.text.strip(),
+                                    {"text": time.text.strip(),
                                      "href": "{0}{1}".format(ROOT_URL,
                                                              show_link)})
         return fn
