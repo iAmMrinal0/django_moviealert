@@ -90,9 +90,12 @@ def verify_times(row, data):
 
 def mail(row, context):
     mail_content = render_to_string("email.html", context).strip()
-    send_mail("Movie Alert found your movie!", "",
-              settings.EMAIL_HOST_USER, [row["username"]],
-              fail_silently=False, html_message=mail_content)
+    return send_mail("Movie Alert found your movie!", "",
+                     settings.EMAIL_HOST_USER, [row["username"]],
+                     fail_silently=False, html_message=mail_content)
+
+
+def update_db(row):
     upd_db = TaskList.objects.get(pk=row["id"])
     upd_db.task_completed = True
     upd_db.notified = True
@@ -110,4 +113,5 @@ def search_movie():
             movie_times = find_movie_times(row, show_url)
             ctx = {"data": movie_times}
             if verify_times(row, movie_times):
-                mail(row, ctx)
+                if mail(row, ctx):
+                    update_db(row)
