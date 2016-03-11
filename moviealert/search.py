@@ -76,6 +76,8 @@ def find_movie_times(row, show_url):
                                     {"text": time.text.strip(),
                                      "href": "{0}{1}".format(ROOT_URL,
                                                              show_link)})
+                    else:
+                        return False
         return fn
     return False
 
