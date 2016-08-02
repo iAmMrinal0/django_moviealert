@@ -7,7 +7,7 @@ from datetime import datetime
 import requests
 
 
-ROOT_URL = "http://in.bookmyshow.com"
+ROOT_URL = "https://in.bookmyshow.com"
 
 
 def validate(db_value, response_value):
