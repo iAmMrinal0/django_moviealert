@@ -23,8 +23,10 @@ urlpatterns = [
     url(r'^$', home, name="home"),
     url(r'^tasklist', task_list, name="tasklist"),
     url(r'^get_city/', get_city),
-    url(r'^accounts/logout/$',
-        'django.contrib.auth.views.logout', {'next_page': '/'}),
+    # url(r'^accounts/logout/$',
+    #     'django.contrib.auth.views.logout',
+    #     {'next_page': '/'}
+    #     ),
     url(r'^accounts/', include('allauth.urls')),
-    url(r'^admin/', include(admin.site.urls)),
+    url(r'^admin/', admin.site.urls),
 ]

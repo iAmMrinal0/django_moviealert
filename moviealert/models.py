@@ -8,7 +8,7 @@ class RegionData(m.Model):
 
 class TaskList(m.Model):
     username = m.EmailField()
-    city = m.ForeignKey(RegionData)
+    city = m.ForeignKey(RegionData, on_delete=m.CASCADE)
     movie_name = m.CharField(max_length=20)
     movie_language = m.CharField(max_length=20)
     movie_date = m.DateField()

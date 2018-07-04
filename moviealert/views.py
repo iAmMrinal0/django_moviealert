@@ -9,7 +9,7 @@ import json
 
 def home(request):
     form = MovieForm()
-    if request.method == 'POST' and request.user.is_authenticated():
+    if request.method == 'POST' and request.user.is_authenticated:
         form = MovieForm(request.POST)
         if form.is_valid():
             email = request.user.email
@@ -26,7 +26,7 @@ def home_files(request, filename):
 
 
 def task_list(request):
-    if request.user.is_authenticated():
+    if request.user.is_authenticated:
         res = TaskList.objects.filter(username=request.user.email).values()
         today = date.today()
         return render(request, "moviealert/task_list.html",
